@@ -20,7 +20,14 @@ pipeline {
         stage('Deploy to UAT') {
             steps {
                 echo 'Deploying to uat..'
-                sh 'git push heroku origin/master:master' 
+                sh 'heroku git:remote -a neem-jenkins-app'
+                sh 'git remote add heroku git@heroku.com:neem-jenkins-app.git'
+                #disbales
+                heroku maintenance:on --app neem-jenkins-app
+                #push to heroku
+                git push --force heroku master
+                #enables
+                heroku maintenance:off --app neem-jenkins-app
             }
         }
     }
