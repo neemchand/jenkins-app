@@ -1,11 +1,5 @@
 pipeline {
-        agent {
-         node {
-            label '' 
-        }
-    }
-
-    
+    agent any
     environment {
         APP_VERSION = '1'
     }
