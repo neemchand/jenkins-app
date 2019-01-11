@@ -1,6 +1,10 @@
 pipeline {
-    agent {  docker { image 'ucreateit/php7.2:v0.1'}
-                } 
+        agent {
+         node {
+            label '' 
+        }
+    }
+
     
     environment {
         APP_VERSION = '1'
@@ -9,7 +13,6 @@ pipeline {
         stage('Build') {
             steps {
                    sh 'php --version'
-                   sh 'composer install'
             }
         }
         stage('Test') {
