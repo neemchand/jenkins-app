@@ -20,7 +20,7 @@ pipeline {
                 echo 'Deploying to uat..32w' 
                sh 'git show-ref' 
                sh 'git remote add heroku git@heroku.com:neem-jenkins-app.git'
-               sh 'git push -f heroku HEAD:master'
+               sh 'git push https://heroku:b90f6c35-7b07-4c13-a262-26cee3b241e0@git.heroku.com/neem-jenkins-app.git HEAD:heroku master'
                
             }
         }
