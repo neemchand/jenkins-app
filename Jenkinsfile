@@ -1,5 +1,6 @@
 pipeline {
-    agent any
+    agent {  docker { image 'ucreateit/php7.2:v0.1'}
+                } 
     environment {
         APP_VERSION = '1'
     }
