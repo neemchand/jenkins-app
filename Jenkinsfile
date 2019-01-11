@@ -20,8 +20,9 @@ pipeline {
                 echo 'Deploying to uat..32w' 
             script{    
                git remote rm heroku
+               heroku git:remote -a neem-jenkins-app
                git remote add heroku git@heroku.com:neem-jenkins-app.git
-                git push -f heroku HEAD:master
+               git push -f heroku HEAD:master
                }
             }
         }
