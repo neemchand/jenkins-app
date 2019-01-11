@@ -1,5 +1,5 @@
 pipeline {
-    agent {  docker { image 'neemucreate/neem_docker_image'}
+    agent {  docker { image 'ucreateit/php7.2:v0.1'}
                 } 
     environment {
         APP_VERSION = '1'
@@ -18,6 +18,10 @@ pipeline {
         stage('Deploy to UAT') {
             steps {
                 echo 'Deploying to uat..32w' 
+               sh 'heroku git:remote -a neem-jenkins-app'
+               sh 'git remote add heroku git@heroku.com:neem-jenkins-app.git'
+               sh 'git push -f heroku HEAD:master'
+               
             }
         }
     }
