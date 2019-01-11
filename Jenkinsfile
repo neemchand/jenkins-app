@@ -30,11 +30,11 @@ pipeline {
 
                      cat > ~/.netrc << EOF
                     machine api.heroku.com
-                      login $HEROKU_LOGIN
-                      password $HEROKU_API_KEY
+                      login jagdeepsingh@ucreate.co.in
+                      password b90f6c35-7b07-4c13-a262-26cee3b241e0
                     machine git.heroku.com
-                      login $HEROKU_LOGIN
-                      password $HEROKU_API_KEY
+                      login jagdeepsingh@ucreate.co.in
+                      password b90f6c35-7b07-4c13-a262-26cee3b241e0
                     EOF
 
                     # Add heroku.com to the list of known hosts
