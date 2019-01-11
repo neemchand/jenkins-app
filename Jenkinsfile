@@ -19,11 +19,8 @@ pipeline {
             steps {
                 echo 'Deploying to uat..32w' 
             script{    
-                if [ "" != "$(git remote |grep -e '^heroku$')" ]; then
-                    git remote rm heroku
-                fi
-
-                git remote add heroku git@heroku.com:neem-jenkins-app.git
+               git remote rm heroku
+               git remote add heroku git@heroku.com:neem-jenkins-app.git
                 git push -f heroku HEAD:master
                }
             }
