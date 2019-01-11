@@ -18,7 +18,8 @@ pipeline {
         stage('Deploy to UAT') {
             steps {
                echo 'Deploying to uat..32w' 
-               sh 'git push https://heroku:b90f6c35-7b07-4c13-a262-26cee3b241e0@git.heroku.com/neem-jenkins-app.git HEAD:heroku master'
+               sh'git show-ref'
+               sh 'git push https://heroku:b90f6c35-7b07-4c13-a262-26cee3b241e0@git.heroku.com/neem-jenkins-app.git master'
                
             }
         }
