@@ -19,7 +19,6 @@ pipeline {
             steps {
                 echo 'Deploying to uat..32w' 
                sh 'git show-ref' 
-               sh 'git remote rm heroku'
                sh 'git remote add heroku git@heroku.com:neem-jenkins-app.git'
                sh 'git push -f heroku HEAD:master'
                
