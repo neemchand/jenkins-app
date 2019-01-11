@@ -18,8 +18,8 @@ pipeline {
         stage('Deploy to UAT') {
             steps {
                 echo 'Deploying to uat..32w' 
+               sh 'git show-ref' 
                sh 'git remote rm heroku'
-               sh 'heroku git:remote -a neem-jenkins-app'
                sh 'git remote add heroku git@heroku.com:neem-jenkins-app.git'
                sh 'git push -f heroku HEAD:master'
                
