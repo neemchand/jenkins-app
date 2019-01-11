@@ -18,13 +18,14 @@ pipeline {
         stage('Deploy to UAT') {
             steps {
                 echo 'Deploying to uat..32w' 
-                sh 'heroku git:remote -a neem-jenkins-app'
-                sh 'git remote add heroku git@heroku.com:neem-jenkins-app.git'
-                sh 'git show-ref'
-                sh 'heroku maintenance:on --app neem-jenkins-app'
-                sh 'git push --force heroku master'
-                sh 'heroku maintenance:off --app neem-jenkins-app'
-               
+            script{    
+                if [ "" != "$(git remote |grep -e '^heroku$')" ]; then
+                    git remote rm heroku
+                fi
+
+                git remote add heroku git@heroku.com:neem-jenkins-app.git
+                git push -f heroku HEAD:master
+               }
             }
         }
     }
