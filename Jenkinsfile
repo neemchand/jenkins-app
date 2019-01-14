@@ -3,8 +3,9 @@ pipeline {
                 } 
     environment {
         APP_VERSION = '1'
-        HEROKU_LOGIN = 'jagdeepsingh@ucreate.co.in'
-        HEROKU_API_KEY ='b90f6c35-7b07-4c13-a262-26cee3b241e0'
+        HEROKU_LOGIN = credentials('heroku_login')
+        HEROKU_APP_NAME = credentials('heroku_app_name')
+        HEROKU_API_KEY = credentials('heroku_jd_acc_api_key')
     }
     stages {
         stage('Build') {
@@ -19,28 +20,11 @@ pipeline {
         }
         stage('Deploy to UAT') {
             steps {
-                echo 'Deploying to uat..32w' 
+                echo 'Deploying to uat..' 
                 sh '''git remote rm heroku
-                git remote add heroku https://git.heroku.com/neem-jenkins-app.git
-                
-                wget https://cli-assets.heroku.com/branches/stable/heroku-linux-amd64.tar.gz
-                sudo mkdir -p /usr/local/lib /usr/local/bin
-                   sudo tar -xvzf heroku-linux-amd64.tar.gz -C /usr/local/lib
-                    sudo ln -s /usr/local/lib/heroku/bin/heroku /usr/local/bin/heroku
-
-                     cat > ~/.netrc << EOF
-                    machine api.heroku.com
-                      login jagdeepsingh@ucreate.co.in
-                      password b90f6c35-7b07-4c13-a262-26cee3b241e0
-                    machine git.heroku.com
-                      login jagdeepsingh@ucreate.co.in
-                      password b90f6c35-7b07-4c13-a262-26cee3b241e0
-                    EOF
-
-                    # Add heroku.com to the list of known hosts
-                    ssh-keyscan -H heroku.com >> ~/.ssh/known_hosts'''
-
-               
+                git remote add heroku https://git.heroku.com/$HEROKU_APP_NAME.git
+                git push --force https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git HEAD:refs/heads/master
+                '''
             }
         }
     }
