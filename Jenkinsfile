@@ -29,7 +29,6 @@ pipeline {
              }
              steps {
                  sh "php -r \"copy('.env.example', '.env');\""
-                 sh 'php artisan key:generate'
                  sh 'composer install -n --prefer-dist'
                  sh './vendor/bin/phpunit'
              }
