@@ -1,11 +1,8 @@
+import groovy.json.JsonSlurper
+
 pipeline {
     agent any
-  
     environment {
-        APP_VERSION = '1'
-        HEROKU_LOGIN = credentials('heroku_login')
-        HEROKU_APP_NAME = credentials('heroku_app_name')
-        HEROKU_API_KEY = credentials('heroku_jd_acc_api_key')
         REDIS_HOST='localhost'
         DB_CONNECTION='pgsql'
         DB_HOST='ec2-13-126-138-166.ap-south-1.compute.amazonaws.com'
@@ -13,61 +10,74 @@ pipeline {
         DB_DATABASE='test'
         DB_USERNAME='postgres'
         DB_PASSWORD='postgres'
+        REPO_URL='narayan-ucreate/jenkins'
+        ACCESS_TOKEN= credentials('JENKINS_ACCESS_TOKEN')
+        PROJECT_NAME='openmind-api'
 
-    }
-    options {
-    skipDefaultCheckout true
     }
     stages {
         stage('install database') {
-               steps {
-                sh 'docker-compose -f docker-compose.yml up -d pgsql'
-                sh 'docker-compose -f docker-compose.yml up -d pgadmin'
-
-               }
-       }
-       stage('install php') {
-                   agent {
-                       docker { image 'ucreateit/php7.2:v0.1' }
-                   }
-
-                steps {
-                       sh "php -r \"copy('.env.example', '.env');\""
-                       sh 'php artisan key:generate'
-                       sh 'composer install -n --prefer-dist'
-                       sh './vendor/bin/phpunit'
-                 }
-       }
-        stage('Test') {
-            steps {
-                echo 'run unit test'
-            }
+             steps {
+                 updateGithubStatus('pending')
+                 sh 'docker-compose -f docker-compose.yml up -d pgsql'
+                 sh 'docker-compose -f docker-compose.yml up -d pgadmin'
+             }
         }
-        
-        stage('Deploy to UAT') {
-            steps {
-                echo 'Deploying to uat..' 
-                sh '''
-                git remote rm heroku
-                git remote add heroku https://git.heroku.com/$HEROKU_APP_NAME.git
-                git push --force https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git HEAD:refs/heads/master
-
-
-                '''
-            }
+        stage('Unit Testing') {
+             agent {
+                 docker { image 'ucreateit/php7.2:v0.1' }
+             }
+             steps {
+                 sh "php -r \"copy('.env.example', '.env');\""
+                 sh 'php artisan key:generate'
+                 sh 'composer install -n --prefer-dist'
+                 sh './vendor/bin/phpunit'
+             }
         }
     }
     post {
-        always {
-          echo 'test Done...21.'
-      }
+        success {
+             script {
+                            //I want to get the same response here
+                            def response = sh(script: 'curl https://production-review-tool.herokuapp.com/api/checkReadyToDeploy?app_name='+env.PROJECT_NAME, returnStdout: true)
+                            def json = new JsonSlurper().parseText(response)
+                            def rejected_count = "${json.rejected_count}"
+                            echo 'rejected count'+rejected_count
+                            if (rejected_count == '0') {
+                             
+                            }
 
-      success {
-          echo 'test ...2.'
-      }
+                        }
 
-      failure {
-          echo 'failure'
-      }
+             updateGithubStatus('success')
+
+        }
+        failure {
+             updateGithubStatus('failure')
+
+        }
     }
 }
+
+void updateGithubStatus(status) {
+     sh 'curl https://api.github.com/repos/narayan-ucreate/jenkins/statuses/'+env.git_COMMIT+'?access_token='+env.ACCESS_TOKEN+' --header "Content-Type: application/json" --data "{\\"state\\": \\"'+status+'\\", \\"description\\": \\"Jenkins\\"}"'
+}
+
+void checkReadyForDeploy(project_name) {
+    sh(script: 'curl https://some-host/some-service/getApi?apikey=someKey', returnStdout: true)
+
+    sh """
+                    brf=${env.REDIS_HOST}
+                    echo \$brf
+                """
+
+
+
+}
+
+void notifyToSlack(status)
+{
+    sh 'curl https://production-review-tool.herokuapp.com/api/buildNotification --header "Content-Type: application/json" --request POST --data "{\\"payload\\" : {\\"build_parameters\\": {\\"CIRCLE_JOB\\" : \\"uat-push\\"}, \\"build_url\\" : \\"asdf\\", \\"committer_name\\" : \\"narayan\\", \\"status\\" : \\"'+status+'\\", \\"subject\\" : \\"Comment name\\", \\"reponame\\" : \\"ucreate-review-tool\\", \\"outcome\\" :\\"success\\",\\"branch\\" : \\"master\\"}}"'
+}
+
+
