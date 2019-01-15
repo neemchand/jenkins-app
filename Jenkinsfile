@@ -21,8 +21,6 @@ pipeline {
     stages {
         stage('install database') {
                steps {
-                //sh 'curl https://api.github.com/repos/neemchand/jenkins-app/statuses/9101f3d8fb3845de571ae65a63b740e785f112ef?access_token="d843bb6d8711c6355dfdb1202aa9a45ca2007ee5" --header "Content-Type: application/json" --data "{state: "success", description: "Jenkins"}"'
-
                 sh 'docker-compose -f docker-compose.yml up -d pgsql'
                 sh 'docker-compose -f docker-compose.yml up -d pgadmin'
 
@@ -61,7 +59,7 @@ pipeline {
     }
     post {
         always {
-          echo 'test Done...1.'
+          echo 'test Done...21.'
       }
 
       success {
