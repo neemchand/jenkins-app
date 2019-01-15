@@ -10,6 +10,7 @@ pipeline {
         DB_DATABASE='test'
         DB_USERNAME='postgres'
         DB_PASSWORD='postgres'
+        DATABASE_URL= 'postgres://postgres:ucreate@ec2-13-126-138-166.ap-south-1.compute.amazonaws.com:5432/test'
         REPO_URL='neemchand/jenkins-app'
         ACCESS_TOKEN= credentials('jenkins_app_git_token')
         PROJECT_NAME='openmind-api'

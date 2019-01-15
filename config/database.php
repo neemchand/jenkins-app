@@ -1,17 +1,14 @@
 <?php
     $url = parse_url(getenv("DATABASE_URL"));
+    $host = $url["host"];
+    $username = $url["user"];
+    $password = $url["pass"];
+    $database = substr($url["path"], 1);
+
     $redisurl = parse_url(getenv("REDIS_URL"));
-    if (isset($url["host"])) { 
-        $host = $url["host"];
-        $username = $url["user"];
-        $password = $url["pass"];
-        $database = substr($url["path"], 1);
-    }
-    if (isset($redisurl["host"])) {
-        $redishost = $redisurl["host"];
-        $redisport = $redisurl["port"];
-        $redispassword = $redisurl["pass"];
-    }
+    $redishost = $redisurl["host"];
+    $redisport = $redisurl["port"];
+    $redispassword = $redisurl["pass"];
 
 return [
 
