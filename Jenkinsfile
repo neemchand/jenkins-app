@@ -10,8 +10,8 @@ pipeline {
         DB_DATABASE='test'
         DB_USERNAME='postgres'
         DB_PASSWORD='postgres'
-        REPO_URL='narayan-ucreate/jenkins'
-        ACCESS_TOKEN= credentials('JENKINS_ACCESS_TOKEN')
+        REPO_URL='neemchand/jenkins-app'
+        ACCESS_TOKEN= credentials('Neem_access_token_for_git')
         PROJECT_NAME='openmind-api'
 
     }
