@@ -60,7 +60,7 @@ pipeline {
 }
 
 void updateGithubStatus(status) {
-     sh 'curl https://api.github.com/repos/narayan-ucreate/jenkins/statuses/'+env.git_COMMIT+'?access_token='+env.ACCESS_TOKEN+' --header "Content-Type: application/json" --data "{\\"state\\": \\"'+status+'\\", \\"description\\": \\"Jenkins\\"}"'
+     sh 'curl https://api.github.com/repos/'+REPO_URL+'/statuses/'+env.git_COMMIT+'?access_token='+env.ACCESS_TOKEN+' --header "Content-Type: application/json" --data "{\\"state\\": \\"'+status+'\\", \\"description\\": \\"Jenkins\\"}"'
 }
 
 void checkReadyForDeploy(project_name) {
