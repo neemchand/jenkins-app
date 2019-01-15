@@ -11,7 +11,7 @@ pipeline {
         DB_USERNAME='postgres'
         DB_PASSWORD='postgres'
         REPO_URL='neemchand/jenkins-app'
-        ACCESS_TOKEN= credentials('Neem_access_token_for_git')
+        ACCESS_TOKEN= credentials('jenkins_app_git_token')
         PROJECT_NAME='openmind-api'
 
     }
